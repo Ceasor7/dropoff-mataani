@@ -1,6 +1,31 @@
 import { useState } from 'react';
 
+const prices = {
+  Nairobi: 100,
+  Kiambu: 150,
+  Kitengela: 200,
+  Thika: 250,
+  Githunguri: 300,
+};
+
 function ParcelDetailsPage() {
+  const [selectedLocation, setSelectedLocation] = useState('Nairobi');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleLocationChange1 = (event) => {
+    setSelectedLocation(event.target.value);
+  };
+
+  const handlePayClick = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleCancelClick = () => {
+    setShowConfirmation(false);
+  };
+
+  const price = prices[selectedLocation];
+
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
   const [location, setLocation] = useState('');
@@ -45,7 +70,7 @@ function ParcelDetailsPage() {
           Parcel Details
         </h1>
         <h2 className="text-xl text-gray-700 font-bold"> Sending from</h2>
-        <form onSubmit={handleSubmit} className="w-full max-w-lg ">
+        <form onSubmit={handleSubmit}>
           <div class="flex flex-col items-center justify-center bg-gray-400 rounded-10">
             <div class="w-96 mb-4">
               <label class="block text-gray-700 font-bold mb-2" for="location">
@@ -82,11 +107,11 @@ function ParcelDetailsPage() {
               </select>
             </div>
           </div>
+          <h2 className="text-xl text-gray-700 font-bold"> Sending to</h2>
           <div class="flex flex-col items-center justify-center bg-orange-400 rounded-10">
-            <h2 className="text-xl text-gray-700 font-bold"> Sending to</h2>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
-                className="block text-gray-700 font-bold mb-2"
+                className="block text-gray-700  font-bold mb-2"
                 htmlFor="receiverName"
               >
                 Receiver Name
@@ -101,7 +126,7 @@ function ParcelDetailsPage() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="receiverPhone"
@@ -118,7 +143,7 @@ function ParcelDetailsPage() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="location"
@@ -126,19 +151,19 @@ function ParcelDetailsPage() {
                 Choose Destination Location
               </label>
               <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="location"
-                value={location}
-                onChange={handleLocationChange}
-                required
+                value={selectedLocation}
+                onChange={handleLocationChange1}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="">Select a location</option>
-                <option value="location1">Location 1</option>
-                <option value="location2">Location 2</option>
-                <option value="location3">Location 3</option>
+                <option value="Nairobi">Nairobi</option>
+                <option value="Kiambu">Kiambu</option>
+                <option value="Kitengela">Kitengela</option>
+                <option value="Thika">Thika</option>
+                <option value="Githunguri">Githunguri</option>
               </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="destinationAgent"
@@ -158,7 +183,7 @@ function ParcelDetailsPage() {
                 <option value="destinationagent3">Agent 3</option>
               </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="receiverPhone"
@@ -175,7 +200,7 @@ function ParcelDetailsPage() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-96">
               <label
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="receiverPhone"
@@ -192,13 +217,54 @@ function ParcelDetailsPage() {
                 required
               />
             </div>
-            <div className="mb-4">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
+            <div className="mb-4 w-96">
+              <label
+                className="block text-gray-700 font-bold mb-2"
+                htmlFor="receiverPhone"
               >
-                Submit
-              </button>
+                Product Description
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="receiverPhone"
+                type="tel"
+                placeholder="Enter receiver phone number"
+                value={receiverPhone}
+                onChange={handleReceiverPhoneChange}
+                required
+              />
+            </div>
+            <div className="mb-4 w-96">
+              <p className="block text-gray-700 font-bold mb-2">
+                Price to send parcel to {selectedLocation}:{' '}
+                <span className="font-bold">{price} KES</span>
+              </p>
+            </div>
+            <div className="mb-4">
+              {!showConfirmation && (
+                <button
+                  onClick={handlePayClick}
+                  className="px-4 py-2 w-96 bg-blue-500 text-white rounded"
+                >
+                  Pay {price} KES
+                </button>
+              )}
+              {showConfirmation && (
+                <div className="flex items-center">
+                  <p className="block text-gray-700 font-bold mb-2">
+                    Are you sure you want to pay {price} KES?
+                  </p>
+                  <button
+                    onClick={handleCancelClick}
+                    className="px-2 py-1 bg-gray-300 text-black rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button className="px-4 py-2 bg-blue-500 text-white rounded ml-2">
+                    Confirm
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </form>

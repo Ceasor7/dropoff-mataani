@@ -1,78 +1,51 @@
 import { useState, useEffect } from 'react';
 
-const images = [
-  {
-    id: 1,
-    src: '/deliveryguy.jpg',
-    link: '/page1',
-    text: 'If you are looking for a reliable and affordable way to send your parcels to your customers in Nairobi, look no further than Dropoff Mtaani courier service. Dropoff Mtaani is a logistics company that helps you deliver your packages to their agents all over the city for only 100 shillings. Your customers can then pick up their parcels from the nearest agent at their convenience. Dropoff Mtaani is fast, easy and convenient. You can track your delivery status online and get notified when your package reaches the agent. Dropoff Mtaani is the best solution for your delivery needs. Contact them today on 0727 497 852 or visit their Facebook page for more information.',
-    buttonText: 'Send Mtaani Package',
-  },
-  {
-    id: 2,
-    src: '/handingpackages.jpg',
-    link: '/page2',
-    text: 'Delivering Packages to your doorstep',
-    buttonText: 'Send Doorstep Package',
-  },
-  {
-    id: 3,
-    src: '/KICC.jpg',
-    link: '/page3',
-    text: 'Track your Package',
-    buttonText: 'Track Package',
-  },
-];
+const images = ['deliveryguy.jpg', 'handingpackages.jpg', 'KICC.jpg'];
 
-const AutoSlider = () => {
-  const [currentImage, setCurrentImage] = useState(images[0]);
+const Slider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [trackingNumber, setTrackingNumber] = useState('');
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const currentIndex = images.findIndex(
-        (image) => image.id === currentImage.id
-      );
-      const nextIndex = (currentIndex + 1) % images.length;
-      setCurrentImage(images[nextIndex]);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [currentImage]);
+    // Automatically move to the next slide every 5 seconds
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-  const handleImageClick = (image) => {
-    setCurrentImage(image);
+  const handleTrackingNumberChange = (event) => {
+    setTrackingNumber(event.target.value);
   };
 
   return (
-    <div className="relative h-screen">
-      <img
-        src={currentImage.src}
-        alt="Image slider"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute bottom-0 left-0 right-0 mb-4 flex justify-center">
-        {images.map((image) => (
-          <div
-            key={image.id}
-            className={`h-2 w-2 rounded-full mx-2 ${
-              currentImage.id === image.id ? 'bg-white' : 'bg-gray-400'
+    <div className="relative h-screen rounded-xl">
+      <div className="absolute top-0 left-0 w-full h-full">
+        {images.map((image, index) => (
+          <img
+            key={index}
+            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
-            onClick={() => handleImageClick(image)}
+            src={image}
+            alt=""
           />
         ))}
       </div>
-      <div className="absolute inset-x-0 bottom-0 bg-gray-900 bg-opacity-50 px-4 py-6">
-        <h2 className="text-xl text-white font-bold mb-4">
-          {currentImage.text}
-        </h2>
-        <a
-          href={currentImage.link}
-          className="bg-orange-400 text-black py-2 px-4 rounded-lg transition-all duration-300 ease-in-out hover:bg-orange-700 text-sm"
-        >
-          {currentImage.buttonText}
-        </a>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <p className="block text-orange-700 text-4xl font-bold mb-2 animate-pulse">
+          Enter Tracking Code
+        </p>
+        <input
+          className="w-full py-2 px-4  rounded-lg bg-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+          type="text"
+          placeholder="Enter tracking number"
+          value={trackingNumber}
+          onChange={handleTrackingNumberChange}
+        />
       </div>
     </div>
   );
 };
 
-export default AutoSlider;
+export default Slider;

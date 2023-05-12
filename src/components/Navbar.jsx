@@ -98,7 +98,7 @@ const Navbar = () => {
                 onClick={handleLogin}
                 className="ml-4 bg-orange-400 text-gray-900 font-medium rounded-lg px-4 py-2 hover:bg-orange-700"
               >
-                Join now
+                Sign up
               </div>
             </Link>
           )}
